@@ -1,0 +1,44 @@
+# This will create a ec2 instance and s3 bucket
+
+Parameters:
+  KeyName:
+    Description: Key pair name
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: ec2-keypair.pem
+  InstanceType:
+    Description: Enter your choice instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t1.micro
+      - t2.nano
+      - t2.micro
+      - t2.small
+  SecurityGroupIds:
+    Description: Security group to access ec2
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Default: 'sg-06ef92dc0c4f9c09b'
+  BucketName:
+    Description: Name of MyS3Bucket
+    Type: String
+    Default: aashishtestbucket
+    
+Resources:
+  Server:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0a74bfeb190bd404f
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SecurityGroupIds: !Ref SecurityGroupIds
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName  
+
+Outputs:
+  InstanceId: 
+    Value: !Ref Server
+  S3BucketName:
+    Value: !Ref S3Bucket
+    Description: Name of S3 bucket
